@@ -11,6 +11,7 @@ import { UsersList } from './pages/users/UsersList';
 import { AuthLayout } from './layout/AuthLayout';
 import { RegisterForm } from './pages/auth/RegisterPage';
 import { ForgotPasswordForm } from './pages/auth/ForgorPasswordForm';
+import { BillsSplitPage } from './pages/bills-split/BillsSplitPage';
 
 
 function App() {
@@ -18,11 +19,12 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route element={<Layout children= {<AppSidebar/>} />}>
+        <Route element={<Layout />}>
           <Route path="/" element={<Dashboard/>} />
           <Route path="/settings" element={<Settings/>}></Route>
           <Route path="/trips" element={<Trips/>}></Route>
           <Route path="/users" element={<UsersList/>}></Route>
+          <Route path="/trips/:id" element={<BillsSplitPage/>}/>
           </Route>
           <Route path="/auth" element={<AuthLayout/>}>
             <Route path="login" element={<LoginPage />} />

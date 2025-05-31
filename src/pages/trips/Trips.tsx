@@ -51,6 +51,7 @@ import {
   import { useForm } from "react-hook-form"
   import { zodResolver } from "@hookform/resolvers/zod"
   import { useState } from "react"
+import { Link } from "react-router-dom"
   
   const FormSchema = z.object({
     dob: z.date({
@@ -225,7 +226,9 @@ import {
             </TableHeader>
             <TableBody>
               <TableRow>
-                <TableCell className="font-medium">INV001</TableCell>
+                <TableCell className="font-medium">
+                    <Link to={`/trips/id`}>IV000</Link>
+                </TableCell>
                 <TableCell>Mountain Escape</TableCell>
                 <TableCell>Manish, Sushmi</TableCell>
                 <TableCell>Credit Card</TableCell>
