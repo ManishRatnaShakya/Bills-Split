@@ -40,22 +40,21 @@ import {
   TableCell
 } from "@/components/ui/table"
 
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent
-} from "@radix-ui/react-popover"
+
 import { CalendarIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent } from "@/components/ui/dropdown-menu"
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu"
 import { Calendar } from "@/components/ui/calendar"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { FormItemComponent } from "@/components/ui/formItems/FormItemComponent"
 
 const FormSchema = z.object({
-  dob: z.date({
+  date: z.date({
     required_error: "A date of birth is required.",
   }),
-  participants: z.array(z.string()).min(1, "Select at least one participant."),
+  paidBy: z.array(z.string()).min(1, "Select at least one participant."),
+  name: z.string().min(1, "Bill name should be atleast 2 or more" )
 })
 
 export function BillsSplitPage() {
@@ -72,8 +71,10 @@ export function BillsSplitPage() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      dob: undefined,
-      participants: [],
+    
+        name: '',
+        date: undefined,
+        paidBy: [],
     },
   })
 
@@ -142,52 +143,57 @@ export function BillsSplitPage() {
               <form onSubmit={form.handleSubmit(onSubmit)}>
                 <div className="grid w-full items-center gap-4">
                   <div className="flex flex-col space-y-1.5">
-                    <FormLabel htmlFor="name">Bill Name</FormLabel>
-                    <Input id="name" placeholder="Name of your trip" />
+                  <FormItemComponent  formDescription = "" name="name" formLabel="Bill name" placeholderValue="Harry potter" type="text" form={form} />
                   </div>
-
+                  <div>
+                      <FormField
+                        control={form.control}
+                        name="date"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-col">
+                            <FormLabel>Trip Date</FormLabel>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <FormControl>
+                                  <Button
+                                    variant={"outline"}
+                                    className={cn(
+                                      "w-full pl-3 text-left font-normal",
+                                      !field.value && "text-muted-foreground"
+                                    )}
+                                  >
+                                    {field.value ? (
+                                      format(field.value, "PPP")
+                                    ) : (
+                                      <span>Pick a date</span>
+                                    )}
+                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                  </Button>
+                                </FormControl>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-auto p-0" align="start">
+                                <Calendar
+                                  mode="single"
+                                  selected={field.value}
+                                  onSelect={field.onChange}
+                                  disabled={(date) =>
+                                    date > new Date() || date < new Date("1900-01-01")
+                                  }
+                                  initialFocus
+                                />
+                              </PopoverContent>
+                            </Popover>
+                            <FormDescription>
+                              Your trip date.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                   <FormField
                     control={form.control}
-                    name="dob"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-col">
-                        <FormLabel>Trip Date</FormLabel>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant={"outline"}
-                                className={cn(
-                                  "w-full pl-3 text-left font-normal",
-                                  !field.value && "text-muted-foreground"
-                                )}
-                              >
-                                {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={field.value}
-                              onSelect={field.onChange}
-                              disabled={(date) =>
-                                date > new Date() || date < new Date("1900-01-01")
-                              }
-                              initialFocus
-                            />
-                          </PopoverContent>
-                        </Popover>
-                        <FormDescription>Your trip date.</FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="participants"
+                    name="paidBy"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Paid By</FormLabel>

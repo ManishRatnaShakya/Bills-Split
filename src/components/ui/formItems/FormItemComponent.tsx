@@ -13,6 +13,7 @@ export function FormItemComponent({
     type = "text",
     name = "",
     form,
+    formDescription = ""
 }: FormItemComponentProps) {
     return (
         <FormField
@@ -25,7 +26,7 @@ export function FormItemComponent({
                         <Input  placeholder = {placeholderValue} type= {type} {...field}/>
                     </FormControl>
                     <FormDescription>
-                        This is your public display name.
+                        {formDescription}
                     </FormDescription>
                     <FormMessage />
                 </FormItem>)}>
@@ -39,4 +40,5 @@ interface FormItemComponentProps {
     placeholderValue?: string;
     type?: string;
     name: string;
+    formDescription: string;
   }
